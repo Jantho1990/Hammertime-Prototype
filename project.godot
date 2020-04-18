@@ -8,15 +8,46 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node",
+"class": "BudgetSystem",
+"language": "GDScript",
+"path": "res://scripts/Budget.gd"
+}, {
+"base": "Node",
+"class": "DataStore",
+"language": "GDScript",
+"path": "res://scripts/DataStore.gd"
+}, {
+"base": "Area2D",
+"class": "TilemapCollisionArea",
+"language": "GDScript",
+"path": "res://maps/TilemapCollisionArea.gd"
+}, {
+"base": "DataStore",
+"class": "UserStore",
+"language": "GDScript",
+"path": "res://scripts/UserStore.gd"
+} ]
 _global_script_class_icons={
-
+"BudgetSystem": "",
+"DataStore": "",
+"TilemapCollisionArea": "",
+"UserStore": ""
 }
 
 [application]
 
 config/name="Hammertime Prototype"
+run/main_scene="res://screens/GameScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+global="*res://scripts/global.gd"
+helpers="*res://scripts/helpers.gd"
+math="*res://scripts/math.gd"
+GlobalSignal="*res://scripts/GlobalSignal.gd"
 
 [rendering]
 
