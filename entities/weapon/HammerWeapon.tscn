@@ -10,7 +10,11 @@ extents = Vector2( 13, 5 )
 extents = Vector2( 2, 10.5 )
 
 [node name="HammerWeapon" type="KinematicBody2D"]
+collision_layer = 4
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -22,3 +26,7 @@ shape = SubResource( 1 )
 [node name="HandleCollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 5.5 )
 shape = SubResource( 2 )
+
+[node name="ThrowTimer" type="Timer" parent="."]
+
+[node name="ThrowAnimation" type="AnimationPlayer" parent="."]

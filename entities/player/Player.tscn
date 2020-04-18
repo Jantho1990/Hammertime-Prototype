@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://entities/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://systems/health/Health.tscn" type="PackedScene" id=2]
 [ext_resource path="res://entities/player/Graphics.tscn" type="PackedScene" id=3]
 [ext_resource path="res://handlers/MovementHandler.tscn" type="PackedScene" id=4]
 [ext_resource path="res://entities/player/Pivot.gd" type="Script" id=5]
+[ext_resource path="res://entities/weapon/HammerWeapon.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 8.0
@@ -26,6 +27,7 @@ hue_variation = 0.14
 hue_variation_random = 0.6
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 2
 script = ExtResource( 1 )
 
 [node name="Health" parent="." instance=ExtResource( 2 )]
@@ -50,6 +52,7 @@ smoothing_enabled = true
 editor_draw_drag_margin = true
 
 [node name="SanitySplatter" type="Particles2D" parent="."]
+emitting = false
 amount = 150
 lifetime = 0.5
 preprocess = 1.0
@@ -57,3 +60,6 @@ explosiveness = 0.72
 randomness = 1.0
 local_coords = false
 process_material = SubResource( 2 )
+
+[node name="HammerWeapon" parent="." instance=ExtResource( 6 )]
+scale = Vector2( 0.5, 0.5 )
