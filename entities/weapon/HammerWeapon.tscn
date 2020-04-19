@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://entities/weapon/HammerWeapon.gd" type="Script" id=1]
 [ext_resource path="res://entities/weapon/hammer-pa.png" type="Texture" id=2]
@@ -9,7 +9,25 @@ extents = Vector2( 13, 5 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 2, 10.5 )
 
+[sub_resource type="Animation" id=3]
+resource_name = "throw"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 10, 0 ), Vector2( 20, 0 ), Vector2( 30, 0 ), Vector2( 40, 0 ), Vector2( 50, 0 ), Vector2( 60, 0 ), Vector2( 70, 0 ), Vector2( 80, 0 ), Vector2( 90, 0 ), Vector2( 100, 0 ) ]
+}
+
 [node name="HammerWeapon" type="KinematicBody2D"]
+position = Vector2( 3, 0 )
 collision_layer = 4
 script = ExtResource( 1 )
 __meta__ = {
@@ -30,3 +48,8 @@ shape = SubResource( 2 )
 [node name="ThrowTimer" type="Timer" parent="."]
 
 [node name="ThrowAnimation" type="AnimationPlayer" parent="."]
+anims/throw = SubResource( 3 )
+
+[node name="ThrowTween" type="Tween" parent="."]
+
+[node name="ReturnTween" type="Tween" parent="."]

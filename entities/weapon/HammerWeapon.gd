@@ -38,8 +38,6 @@ func _physics_process(_delta):
   
   if Input.is_action_pressed('weapon_throw'):
     current_throw_state = throw_state.THROWING
-  else:
-    current_throw_state = throw_state.HOLDING
 
 func handle_throw_state_holding():
   if rotation != 0:
@@ -49,12 +47,21 @@ func handle_throw_state_holding():
 func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x
   update_position()
+  if not $ThrowTween.is_active():
+    $ThrowTween.interpolate_property(self, 'position', Vector2(position), (position + Vector2(100, 0)), 0.1)
+    $ThrowTween.interpolate_property(self, 'position', (position + Vector2(100, 0)), (position + Vector2(100, 0)), 0.2, 0, 2, 0.2)
+    $ThrowTween.interpolate_property(self, 'position', (position + Vector2(100, 0)), Vector2(position), 0.1, 0, 2, 0.3)
+    $ThrowTween.interpolate_callback(self, 0.4, '_on_Tween_stop')
+    $ThrowTween.start()
 
 func handle_throw_state_suspending():
   pass
 
 func handle_throw_state_returning():
   pass
+
+func _on_Tween_stop():
+  current_throw_state = throw_state.HOLDING
 
 func update_position():
   position = hold_offset * dir
