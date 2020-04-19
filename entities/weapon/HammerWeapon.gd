@@ -25,6 +25,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
   dir = parent.direction
+  print(current_throw_state)
   match current_throw_state:
     throw_state.THROWING:
       handle_throw_state_throwing()
@@ -34,20 +35,29 @@ func _physics_process(_delta):
       handle_throw_state_returning()
     throw_state.HOLDING, _:
      handle_throw_state_holding()
+  
+  if Input.is_action_pressed('weapon_throw'):
+    current_throw_state = throw_state.THROWING
+  else:
+    current_throw_state = throw_state.HOLDING
 
 func handle_throw_state_holding():
   if rotation != 0:
     rotation = 0
-  position = hold_offset * dir
+  update_position()
 
 func handle_throw_state_throwing():
-  pass
+  rotation_degrees += rotation_force_deg * dir.x
+  update_position()
 
 func handle_throw_state_suspending():
   pass
 
 func handle_throw_state_returning():
   pass
+
+func update_position():
+  position = hold_offset * dir
 
 func set_throw_state(value):
   if throw_state.has(value):
