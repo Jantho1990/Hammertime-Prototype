@@ -9,7 +9,7 @@ enum throw_state {
 
 var current_throw_state = throw_state.HOLDING setget set_throw_state
 
-var hold_offset = Vector2(6, 0)
+var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
 var motion = Vector2(0, 0)
 
@@ -38,7 +38,7 @@ func _physics_process(_delta):
 func handle_throw_state_holding():
   if rotation != 0:
     rotation = 0
-  # position = parent.position + (hold_offset * dir)
+  position = hold_offset * dir
 
 func handle_throw_state_throwing():
   pass
