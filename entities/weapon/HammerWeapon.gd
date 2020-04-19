@@ -13,7 +13,7 @@ var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
 var motion = Vector2(0, 0)
 
-var rotation_force_deg = 10
+var rotation_force_deg = 30
 
 onready var parent = get_parent()
 
