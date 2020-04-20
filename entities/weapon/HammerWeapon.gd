@@ -11,9 +11,10 @@ var current_throw_state = throw_state.HOLDING setget set_throw_state
 
 var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
+var thrown_dir = dir
 var motion = Vector2(0, 0)
 
-var rotation_force_deg = 30
+var rotation_force_deg = 60
 
 onready var parent = get_parent()
 
@@ -25,7 +26,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
   dir = parent.direction
-  print(current_throw_state)
   match current_throw_state:
     throw_state.THROWING:
       handle_throw_state_throwing()
@@ -36,7 +36,8 @@ func _physics_process(_delta):
     throw_state.HOLDING, _:
      handle_throw_state_holding()
   
-  if Input.is_action_pressed('weapon_throw'):
+  if Input.is_action_pressed('weapon_throw') and \
+    current_throw_state == throw_state.HOLDING:
     current_throw_state = throw_state.THROWING
 
 func handle_throw_state_holding():
@@ -48,19 +49,37 @@ func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x
   update_position()
   if not $ThrowTween.is_active():
-    $ThrowTween.interpolate_property(self, 'position', Vector2(position), (position + Vector2(100, 0)), 0.1)
-    $ThrowTween.interpolate_property(self, 'position', (position + Vector2(100, 0)), (position + Vector2(100, 0)), 0.2, 0, 2, 0.2)
-    $ThrowTween.interpolate_property(self, 'position', (position + Vector2(100, 0)), Vector2(position), 0.1, 0, 2, 0.3)
-    $ThrowTween.interpolate_callback(self, 0.4, '_on_Tween_stop')
+    thrown_dir = dir
+    var start = position
+    var destination = position + (Vector2(200, 1) * thrown_dir)
+    print("START", start, "DESTINATION", destination)
+    $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
+    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_throwing_stop')
     $ThrowTween.start()
 
 func handle_throw_state_suspending():
-  pass
+  rotation_degrees += rotation_force_deg * thrown_dir.x
+  if not $ThrowTween.is_active():
+    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_suspending_stop')
+    $ThrowTween.start()
 
 func handle_throw_state_returning():
-  pass
+  rotation_degrees += rotation_force_deg * thrown_dir.x
+  if not $ThrowTween.is_active():
+    var start = position
+    var destination = position - (Vector2(200, 1) * thrown_dir)
+    print("START", start, "DESTINATION", destination)
+    $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
+    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
+    $ThrowTween.start()
 
-func _on_Tween_stop():
+func _on_Tween_throwing_stop():
+  current_throw_state = throw_state.SUSPENDING
+
+func _on_Tween_suspending_stop():
+  current_throw_state = throw_state.RETURNING
+
+func _on_Tween_returning_stop():
   current_throw_state = throw_state.HOLDING
 
 func update_position():
