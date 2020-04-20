@@ -12,6 +12,7 @@ var current_throw_state = throw_state.HOLDING setget set_throw_state
 var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
 var thrown_dir = dir
+var cursor_position = Vector2(0, 0)
 var motion = Vector2(0, 0)
 
 var rotation_force_deg = 60
@@ -26,6 +27,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
   dir = parent.direction
+  cursor_position = get_local_mouse_position()
   match current_throw_state:
     throw_state.THROWING:
       handle_throw_state_throwing()
@@ -51,8 +53,7 @@ func handle_throw_state_throwing():
   if not $ThrowTween.is_active():
     thrown_dir = dir
     var start = position
-    var destination = position + (Vector2(200, 1) * thrown_dir)
-    print("START", start, "DESTINATION", destination)
+    var destination = (position + (Vector2(200, 1) * thrown_dir)).rotated(position.angle_to(cursor_position))
     $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_throwing_stop')
     $ThrowTween.start()
@@ -67,8 +68,7 @@ func handle_throw_state_returning():
   rotation_degrees += rotation_force_deg * thrown_dir.x
   if not $ThrowTween.is_active():
     var start = position
-    var destination = position - (Vector2(200, 1) * thrown_dir)
-    print("START", start, "DESTINATION", destination)
+    var destination = Vector2(0, 0)
     $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
     $ThrowTween.start()
