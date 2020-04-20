@@ -11,7 +11,11 @@ var current_throw_state = throw_state.HOLDING setget set_throw_state
 
 var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
+var throwing = false
+var throw_acceleration = 20
+var throw_max_speed = 100
 var thrown_dir = dir
+var throw_destination = Vector2(0, 0)
 var cursor_position = Vector2(0, 0)
 var motion = Vector2(0, 0)
 
@@ -50,13 +54,14 @@ func handle_throw_state_holding():
 func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x
   update_position()
-  if not $ThrowTween.is_active():
-    thrown_dir = dir
-    var start = position
-    var destination = (position + (Vector2(200, 1) * thrown_dir)).rotated(position.angle_to(cursor_position))
-    $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
-    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_throwing_stop')
-    $ThrowTween.start()
+  
+  tween_throw()
+  if not throwing:
+    # Launch the weapon
+    pass
+  elif test_move(transform, global_position):
+    print('COLLISION', global_position)
+    pass
 
 func handle_throw_state_suspending():
   rotation_degrees += rotation_force_deg * thrown_dir.x
@@ -71,6 +76,19 @@ func handle_throw_state_returning():
     var destination = Vector2(0, 0)
     $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
+    $ThrowTween.start()
+
+func tween_throw():
+  if not $ThrowTween.is_active():
+    throwing = true
+    thrown_dir = dir
+    var start = position
+    var destination = (position + (Vector2(200, 1) * thrown_dir)).rotated(position.angle_to(cursor_position))
+    var collision = move_and_collide(destination, true, true, true)
+    if collision:
+      destination = collision.travel
+    $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
+    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_throwing_stop')
     $ThrowTween.start()
 
 func _on_Tween_throwing_stop():
