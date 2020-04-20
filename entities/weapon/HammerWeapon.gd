@@ -38,7 +38,7 @@ func _physics_process(_delta):
     throw_state.HOLDING, _:
      handle_throw_state_holding()
   
-  if Input.is_action_pressed('weapon_throw') and \
+  if Input.is_action_just_pressed('weapon_throw') and \
     current_throw_state == throw_state.HOLDING:
     current_throw_state = throw_state.THROWING
 
