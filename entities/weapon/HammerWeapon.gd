@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+const UP = Vector2(0, -1)
+
 enum throw_state {
   HOLDING,
   THROWING,
@@ -12,15 +14,17 @@ var current_throw_state = throw_state.HOLDING setget set_throw_state
 var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
 var throwing = false
-var throw_acceleration = 20
-var throw_max_speed = 100
+var throw_acceleration = 1
+var throw_max_speed = 800
 var throw_range = 200
+var throw_travel_distance = 0
 var thrown_dir = dir
-var throw_destination = Vector2(0, 0)
+var throw_target_position = Vector2(0, 0)
 var cursor_position = Vector2(0, 0)
 var motion = Vector2(0, 0)
 
 var rotation_force_deg = 60
+var __delta
 
 onready var parent = get_parent()
 
@@ -30,7 +34,8 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta):
+func _physics_process(delta):
+  __delta = delta
   dir = parent.direction
   cursor_position = get_local_mouse_position()
   match current_throw_state:
@@ -54,15 +59,21 @@ func handle_throw_state_holding():
 
 func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x
-  update_position()
+  # update_position()
   
-  tween_throw()
+  # tween_throw()
   if not throwing:
     # Launch the weapon
-    pass
-  elif test_move(transform, global_position):
-    print('COLLISION', global_position)
-    pass
+    throw_weapon()
+    # pass
+  # elif test_move(transform, global_position):
+  #   print('COLLISION', global_position)
+  #   pass
+  else:
+    update_thrown_weapon()
+  
+  if collision_detected() or throw_travel_distance == throw_range:
+    current_throw_state = throw_state.SUSPENDING
 
 func handle_throw_state_suspending():
   rotation_degrees += rotation_force_deg * thrown_dir.x
@@ -72,9 +83,37 @@ func handle_throw_state_returning():
   rotation_degrees += rotation_force_deg * thrown_dir.x
   tween_return()
 
+func throw_weapon():
+  throwing = true
+  thrown_dir = dir
+  print("THROW WEAPON")
+  # var destination = (position + (Vector2(200, 1) * dir)).rotated(position.angle_to(cursor_position))
+  # motion = motion.rotated(motion.angle() - motion.angle()) # reset to zero
+  throw_target_position.rotated(throw_target_position.angle() - throw_target_position.angle())
+  throw_target_position = (global_position + (Vector2(throw_range, 0) * dir)).rotated(position.angle_to(cursor_position))
+  # var throw_angle = position.angle_to(cursor_position)
+  # motion = motion.rotated(throw_angle)
+  calculate_motion()
+  motion = move_and_slide(motion, UP)
+
+func update_thrown_weapon():
+  calculate_motion()
+  motion = move_and_slide(motion, UP)
+
+func calculate_motion():
+  var motion_velocity = throw_max_speed * __delta
+  # var motion_distance = min(motion_velocity, throw_range)
+  # motion += motion.move_toward(throw_target_position, motion_velocity)
+  motion = (Vector2(throw_max_speed, 0) * thrown_dir).rotated(global_position.angle_to(throw_target_position))
+  throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
+  print('TRAVEL:', throw_travel_distance)
+  # print("MOTION: ", motion, "ANGLE:", motion.angle(), " VEL: ", motion_velocity, " TP: ", throw_target_position, " DT: ", __delta)
+
+func collision_detected():
+  return get_slide_count() > 0
+  
 func tween_throw():
   if not $ThrowTween.is_active():
-    throwing = true
     thrown_dir = dir
     var start = position
     var destination = (position + (Vector2(200, 1) * thrown_dir)).rotated(position.angle_to(cursor_position))
@@ -106,6 +145,10 @@ func _on_Tween_suspending_stop():
 
 func _on_Tween_returning_stop():
   current_throw_state = throw_state.HOLDING
+  throwing = false
+  motion = Vector2(0, 0)
+  throw_travel_distance = 0
+  print("HOLDING")
 
 func update_position():
   position = hold_offset * dir
