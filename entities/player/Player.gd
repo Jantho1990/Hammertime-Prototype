@@ -38,6 +38,7 @@ var immobile_timer
 
 onready var health = $Health
 onready var spellCaster = $SanityCaster
+onready var Weapon = $HammerWeapon
 
 func _ready():
   $MovementHandler.set_defaults({

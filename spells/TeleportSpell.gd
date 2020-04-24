@@ -3,4 +3,5 @@ extends Spell
 
 func effect():
   .effect()
-  breakpoint
+  var caster = Spellcaster.Caster
+  caster.position = caster.Weapon.global_position
