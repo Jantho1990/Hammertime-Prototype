@@ -31,7 +31,7 @@ onready var parent = get_parent()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-  pass # Replace with function body.
+  GlobalSignal.listen('teleport', self, '_on_Teleport')
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -52,6 +52,12 @@ func _physics_process(delta):
   if Input.is_action_just_pressed('weapon_throw') and \
     current_throw_state == throw_state.HOLDING:
     current_throw_state = throw_state.THROWING
+
+func _on_Teleport():
+  if current_throw_state != throw_state.HOLDING:
+    GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
+    $ThrowTween.stop_all()
+    _on_Tween_returning_stop()
 
 func handle_throw_state_holding():
   if rotation != 0:
@@ -145,7 +151,9 @@ func tween_throw():
     $ThrowTween.start()
 
 func tween_suspend():
+  print('SUSPEND')
   if not $ThrowTween.is_active():
+    print('SUSPEND ACTIVE')
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_suspending_stop')
     $ThrowTween.start()
 
@@ -178,6 +186,7 @@ func _on_Tween_returning_stop():
   throwing = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
+  update_position()
   # GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
   print("HOLDING")
 
