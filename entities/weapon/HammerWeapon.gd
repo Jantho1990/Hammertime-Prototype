@@ -120,7 +120,18 @@ func calculate_motion():
 
 func collision_detected():
   return get_slide_count() > 0
-  
+
+func return_weapon():
+  calculate_motion()
+  motion = move_and_slide(motion, UP)
+
+func calculate_return_motion():
+  # var motion_distance = min(motion_velocity, throw_range)
+  # motion += motion.move_toward(throw_target_position, motion_velocity)
+  motion = (Vector2(throw_max_speed, 0) * thrown_dir).rotated(global_position.angle_to(parent.position))
+  throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
+  print('RETURN:', throw_travel_distance)
+
 func tween_throw():
   if not $ThrowTween.is_active():
     thrown_dir = dir
@@ -140,10 +151,19 @@ func tween_suspend():
 
 func tween_return():
   if not $ThrowTween.is_active():
-    var start = position
-    # var destination = Vector2(0, 0)
-    var destination = parent.position
+    var offset_position = Vector2(0, 0) + (global_position - parent.global_position)
+    var gb = global_position
+    var pgb = parent.global_position
+    GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
+    # breakpoint
+    # var start = position
+    # var start = global_position
+    var start = offset_position
+    var destination = hold_offset * dir
+    # var destination = parent.position
+    # var destination = parent.global_position
     $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
+    # $ThrowTween.interpolate_property(self, 'global_position', start, destination, 0.2)
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
     $ThrowTween.start()
 
@@ -158,7 +178,7 @@ func _on_Tween_returning_stop():
   throwing = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
-  GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
+  # GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
   print("HOLDING")
 
 func update_position():

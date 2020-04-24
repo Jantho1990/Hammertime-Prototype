@@ -21,7 +21,7 @@ func _on_hammer_returned(data):
   var hammer = data.hammer
   remove_child(hammer)
   hammer.parent.add_child(hammer)
-  hammer.position = Vector2(0, 0)
+  # hammer.position = Vector2(0, 0)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
