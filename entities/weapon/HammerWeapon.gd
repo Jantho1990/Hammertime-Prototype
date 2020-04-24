@@ -14,6 +14,7 @@ var current_throw_state = throw_state.HOLDING setget set_throw_state
 var hold_offset = Vector2(12, 0)
 var dir = Vector2(1, 0)
 var throwing = false
+var returning = false
 var throw_acceleration = 1
 var throw_max_speed = 800
 var throw_range = 200
@@ -28,6 +29,7 @@ var rotation_force_deg = 60
 var __delta
 
 onready var parent = get_parent()
+onready var throwTween = $ThrowTween
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -39,6 +41,8 @@ func _physics_process(delta):
   __delta = delta
   dir = parent.direction
   cursor_position = get_local_mouse_position()
+  GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
+  GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   match current_throw_state:
     throw_state.THROWING:
       handle_throw_state_throwing()
@@ -57,6 +61,7 @@ func _on_Teleport():
   if current_throw_state != throw_state.HOLDING:
     GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
     $ThrowTween.stop_all()
+    $ThrowTween.reset_all()
     _on_Tween_returning_stop()
 
 func handle_throw_state_holding():
@@ -151,14 +156,15 @@ func tween_throw():
     $ThrowTween.start()
 
 func tween_suspend():
-  print('SUSPEND')
   if not $ThrowTween.is_active():
-    print('SUSPEND ACTIVE')
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_suspending_stop')
     $ThrowTween.start()
 
 func tween_return():
-  if not $ThrowTween.is_active():
+  if not returning:
+    returning = true
+    # GlobalSignal.dispatch('debug_label2', { 'text': 'fish' })
+    # breakpoint
     var offset_position = Vector2(0, 0) + (global_position - parent.global_position)
     var gb = global_position
     var pgb = parent.global_position
@@ -184,6 +190,7 @@ func _on_Tween_suspending_stop():
 func _on_Tween_returning_stop():
   current_throw_state = throw_state.HOLDING
   throwing = false
+  returning = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
   update_position()
