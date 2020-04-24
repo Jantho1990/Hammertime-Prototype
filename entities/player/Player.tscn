@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://entities/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://systems/health/Health.tscn" type="PackedScene" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://handlers/MovementHandler.tscn" type="PackedScene" id=4]
 [ext_resource path="res://entities/player/Pivot.gd" type="Script" id=5]
 [ext_resource path="res://entities/weapon/HammerWeapon.tscn" type="PackedScene" id=6]
+[ext_resource path="res://systems/spellcaster/Spellcaster.tscn" type="PackedScene" id=7]
+[ext_resource path="res://spells/TeleportSpell.tscn" type="PackedScene" id=8]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 8.0
@@ -63,3 +65,8 @@ process_material = SubResource( 2 )
 
 [node name="HammerWeapon" parent="." instance=ExtResource( 6 )]
 scale = Vector2( 0.5, 0.5 )
+
+[node name="Spellcaster" parent="." instance=ExtResource( 7 )]
+active_spell = NodePath("TeleportSpell")
+
+[node name="TeleportSpell" parent="Spellcaster" instance=ExtResource( 8 )]
