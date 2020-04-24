@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://entities/player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://maps/SimpleMap.tscn" type="PackedScene" id=2]
 [ext_resource path="res://screens/GameScreen.gd" type="Script" id=3]
+[ext_resource path="res://screens/HammerThrowContainer.gd" type="Script" id=4]
 
 [node name="GameScreen" type="Node2D"]
 script = ExtResource( 3 )
@@ -11,3 +12,6 @@ script = ExtResource( 3 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 2413.25, 1522.45 )
+
+[node name="HammerThrowContainer" type="Node2D" parent="."]
+script = ExtResource( 4 )

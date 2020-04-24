@@ -19,6 +19,7 @@ var throw_max_speed = 800
 var throw_range = 200
 var throw_travel_distance = 0
 var thrown_dir = dir
+var throw_origin_position = Vector2(0, 0)
 var throw_target_position = Vector2(0, 0)
 var cursor_position = Vector2(0, 0)
 var motion = Vector2(0, 0)
@@ -74,6 +75,10 @@ func handle_throw_state_throwing():
   
   if collision_detected() or throw_travel_distance == throw_range:
     current_throw_state = throw_state.SUSPENDING
+  
+  # position -= parent.global_position - throw_origin_position
+  # print(parent.global_position - throw_origin_position)
+  # global_position -= parent.global_position - throw_origin_position
 
 func handle_throw_state_suspending():
   rotation_degrees += rotation_force_deg * thrown_dir.x
@@ -85,6 +90,7 @@ func handle_throw_state_returning():
 
 func throw_weapon():
   throwing = true
+  throw_origin_position = global_position
   thrown_dir = dir
   print("THROW WEAPON")
   # var destination = (position + (Vector2(200, 1) * dir)).rotated(position.angle_to(cursor_position))
@@ -93,12 +99,15 @@ func throw_weapon():
   throw_target_position = (global_position + (Vector2(throw_range, 0) * dir)).rotated(position.angle_to(cursor_position))
   # var throw_angle = position.angle_to(cursor_position)
   # motion = motion.rotated(throw_angle)
+  GlobalSignal.dispatch('hammer_thrown', { 'hammer': self })
   calculate_motion()
   motion = move_and_slide(motion, UP)
-
+  print('POS: ', position, 'MOTION: ', motion)
+  
 func update_thrown_weapon():
   calculate_motion()
   motion = move_and_slide(motion, UP)
+  print('POS: ', position, 'MOTION: ', motion)
 
 func calculate_motion():
   var motion_velocity = throw_max_speed * __delta
@@ -132,7 +141,8 @@ func tween_suspend():
 func tween_return():
   if not $ThrowTween.is_active():
     var start = position
-    var destination = Vector2(0, 0)
+    # var destination = Vector2(0, 0)
+    var destination = parent.position
     $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
     $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
     $ThrowTween.start()
@@ -148,6 +158,7 @@ func _on_Tween_returning_stop():
   throwing = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
+  GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
   print("HOLDING")
 
 func update_position():
