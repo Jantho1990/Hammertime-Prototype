@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Construct
 
+var energy_cost = 0 # Used to know how much energy this costs to cast, this is set by Spellcaster
+
 var is_gizmo = true # Used by collision system to check if this is a gizmo.
 
 enum COLLISION_LAYERS {

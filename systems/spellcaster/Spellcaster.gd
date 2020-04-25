@@ -80,6 +80,8 @@ func _ready():
   if active_spell != null and !active_spell.is_empty():
     active_spell = get_node(active_spell)
   
+  GlobalSignal.listen('delete_unit', self, '_on_Delete_unit')
+
   GlobalSignal.dispatch('set_energy', {
     'energy': mana_current,
     'max_energy': mana_total,
@@ -92,6 +94,10 @@ func _physics_process(delta):
   # Update game logic here.
   recharge(delta)
   GlobalSignal.dispatch('energy_change', { 'energy': mana_current })
+
+func _on_Delete_unit(data):
+  var amount = data.entity.energy_cost
+  increase_mana_total(amount)
 
 # Find a spell using any key and value.
 func find_spell(key, value):
@@ -132,4 +138,9 @@ func get_active_spell():
 func reduce_mana_total(amount):
   reduction_amount += amount
   calculated_mana_total = mana_total - reduction_amount
-  GlobalSignal.dispatch('reduce_energy', { 'reduction': amount })
+  GlobalSignal.dispatch('reduce_energy', { 'amount': amount })
+
+func increase_mana_total(amount):
+  reduction_amount -= amount
+  calculated_mana_total = mana_total - reduction_amount
+  GlobalSignal.dispatch('increase_energy', { 'amount': amount })

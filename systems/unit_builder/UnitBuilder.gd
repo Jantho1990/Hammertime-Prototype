@@ -40,6 +40,7 @@ func _on_Build_unit(data):
     print('Building unit ', unit_name)
     var buildable_unit = buildable_units[unit_name]
     var unit = buildable_unit.instance()
+    unit.energy_cost = unit_cost
     # if not Budget.can_afford(unit.budget_cost):
     #   print('cannot afford to build ', unit.name)
     #   GlobalSignal.dispatch('unit_cannot_afford', { 'unit': unit })
