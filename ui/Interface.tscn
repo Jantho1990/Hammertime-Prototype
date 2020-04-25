@@ -27,8 +27,9 @@ margin_right = 200.0
 margin_bottom = 20.0
 
 [node name="DebugContainer" type="MarginContainer" parent="."]
-margin_left = 924.0
-margin_right = 1024.0
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -100.0
 margin_bottom = 100.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
