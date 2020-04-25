@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://entities/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://systems/health/Health.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://entities/weapon/HammerWeapon.tscn" type="PackedScene" id=6]
 [ext_resource path="res://systems/spellcaster/Spellcaster.tscn" type="PackedScene" id=7]
 [ext_resource path="res://spells/TeleportSpell.tscn" type="PackedScene" id=8]
+[ext_resource path="res://spells/CreateConstruct.tscn" type="PackedScene" id=9]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 8.0
@@ -74,3 +75,5 @@ active_spell = NodePath("TeleportSpell")
 [node name="TeleportSpell" parent="Spellcaster" instance=ExtResource( 8 )]
 cost = 25.0
 cooldown = 0.1
+
+[node name="CreateConstruct" parent="Spellcaster" instance=ExtResource( 9 )]

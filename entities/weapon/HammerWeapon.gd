@@ -104,7 +104,7 @@ func throw_weapon():
   throwing = true
   throw_origin_position = global_position
   thrown_dir = dir
-  print("THROW WEAPON")
+  # print("THROW WEAPON")
   # var destination = (position + (Vector2(200, 1) * dir)).rotated(position.angle_to(cursor_position))
   # motion = motion.rotated(motion.angle() - motion.angle()) # reset to zero
   throw_target_position.rotated(throw_target_position.angle() - throw_target_position.angle())
@@ -114,12 +114,12 @@ func throw_weapon():
   GlobalSignal.dispatch('hammer_thrown', { 'hammer': self })
   calculate_motion()
   motion = move_and_slide(motion, UP)
-  print('POS: ', position, 'MOTION: ', motion)
+  # print('POS: ', position, 'MOTION: ', motion)
   
 func update_thrown_weapon():
   calculate_motion()
   motion = move_and_slide(motion, UP)
-  print('POS: ', position, 'MOTION: ', motion)
+  # print('POS: ', position, 'MOTION: ', motion)
 
 func calculate_motion():
   var motion_velocity = throw_max_speed * __delta
@@ -127,7 +127,7 @@ func calculate_motion():
   # motion += motion.move_toward(throw_target_position, motion_velocity)
   motion = (Vector2(throw_max_speed, 0) * thrown_dir).rotated(global_position.angle_to(throw_target_position))
   throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
-  print('TRAVEL:', throw_travel_distance)
+  # print('TRAVEL:', throw_travel_distance)
   # print("MOTION: ", motion, "ANGLE:", motion.angle(), " VEL: ", motion_velocity, " TP: ", throw_target_position, " DT: ", __delta)
 
 func collision_detected():
@@ -142,7 +142,7 @@ func calculate_return_motion():
   # motion += motion.move_toward(throw_target_position, motion_velocity)
   motion = (Vector2(throw_max_speed, 0) * thrown_dir).rotated(global_position.angle_to(parent.position))
   throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
-  print('RETURN:', throw_travel_distance)
+  # print('RETURN:', throw_travel_distance)
 
 func tween_throw():
   if not $ThrowTween.is_active():
@@ -196,7 +196,7 @@ func _on_Tween_returning_stop():
   throw_travel_distance = 0
   update_position()
   # GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
-  print("HOLDING")
+  # print("HOLDING")
 
 func update_position():
   position = hold_offset * dir

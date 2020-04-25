@@ -2,7 +2,7 @@ extends Node
 
 # class member variables go here, for example:
 # var a = 2
-# var b = "textvar"
+# var b = 'textvar'
 
 export(float) var mana_total = 100
 export(float) var mana_current = 100
@@ -26,16 +26,16 @@ func get_spells():
   var ret = []
   var children = get_children()
   for child in get_children():
-    if child.get("_class_name") != null and child._class_name == "Spell":
+    if child.get('_class_name') != null and child._class_name == 'Spell':
       ret.push_back(child)
   return ret
 
 # Attempt to cast a spell
 func cast():
-  print("casting")
-  print(active_spell, " is active")
+  print('casting')
+  print(active_spell, ' is active')
   if typeof(active_spell) == TYPE_NODE_PATH and active_spell.is_empty():
-    print("welp")
+    print('welp')
     return
   
   if active_spell == null:
@@ -45,10 +45,10 @@ func cast():
   
   if spell.can_cast(mana_current):
     spell.effect()
-    print("can cast")
+    print('can cast')
   else:
     # notify user that they can't cast the spell
-    print("Cannot cast")
+    print('Cannot cast')
     pass
 
 # Recharge the spellcaster's mana
@@ -61,15 +61,15 @@ func recharge(delta):
   if mana_current > mana_total:
     mana_current = mana_total
   
-#	GlobalSignal.dispatch("update_ui_sanity", {
-#		"current": mana_current
+#	GlobalSignal.dispatch('update_ui_sanity', {
+#		'current': mana_current
 #	})
 
 func _input(event):
   # Switch active spell if hotkey is being pressed.
-  if event.is_action_pressed("spell_hotkey"):
+  if event.is_action_pressed('spell_hotkey'):
     switch_active_spell(int(event.as_text()))
-  elif event.is_action_released("spell_hotkey"):
+  elif event.is_action_released('spell_hotkey'):
     after_switch_active_spell(int(event.as_text()))
 
 func _ready():
@@ -94,7 +94,11 @@ func find_spell(key, value):
 # Switch the active spell.
 func switch_active_spell(hotkey):
   if active_spell == null or active_spell.hotkey != hotkey:
-    self.active_spell = find_spell("hotkey", hotkey)
+    self.active_spell = find_spell('hotkey', hotkey)
+  
+func switch_active_spell_by_name(spell_name):
+  if active_spell == null or active_spell.name != spell_name:
+    self.active_spell = find_spell('name', spell_name)
 
 # Callback after active spell is switched.
 func after_switch_active_spell(hotkey):
@@ -108,9 +112,9 @@ func set_active_spell(spell):
   if spell != null:
     active_spell = spell
     if typeof(active_spell) != TYPE_NODE_PATH:
-      GlobalSignal.dispatch("update_ui_spell_slot", {
-        "spell_name": active_spell.name,
-        "selected": true
+      GlobalSignal.dispatch('update_ui_spell_slot', {
+        'spell_name': active_spell.name,
+        'selected': true
       })
 
 func get_active_spell():

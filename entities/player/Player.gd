@@ -119,8 +119,14 @@ func _physics_process(delta):
   if Input.is_action_just_pressed('cast'):
     if not $Spellcaster.active_spell.name == 'TeleportSpell' or \
       Weapon.throwing:
+        $Spellcaster.switch_active_spell_by_name('TeleportSpell')
         $Spellcaster.cast()
     # print("no casting for now")
+  
+  # Construct building
+  if Input.is_action_just_pressed('build_construct') and Weapon.throwing:
+    $Spellcaster.switch_active_spell_by_name('CreateConstruct')
+    $Spellcaster.cast()
   
   # Final movement integration
   motion = move_and_slide(motion, UP)

@@ -1,8 +1,8 @@
 [gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://entities/constructs/Platform/PlatformConstruct.gd" type="Script" id=1]
-[ext_resource path="res://entities/constructs/Platform/platform (top only).png" type="Texture" id=2]
-[ext_resource path="res://entities/constructs/Platform/platform (jets only).png" type="Texture" id=3]
+[ext_resource path="res://entities/constructs/PlatformConstruct/PlatformConstruct.gd" type="Script" id=1]
+[ext_resource path="res://entities/constructs/PlatformConstruct/platform (top only).png" type="Texture" id=2]
+[ext_resource path="res://entities/constructs/PlatformConstruct/platform (jets only).png" type="Texture" id=3]
 [ext_resource path="res://systems/selection_manager/SelectionArea.tscn" type="PackedScene" id=4]
 [ext_resource path="res://systems/draggable/Draggable.tscn" type="PackedScene" id=5]
 [ext_resource path="res://systems/placeable/Placeable.tscn" type="PackedScene" id=6]
@@ -27,7 +27,6 @@ extents = Vector2( 48, 28 )
 
 [node name="PlatformGizmo" type="Node2D"]
 script = ExtResource( 1 )
-budget_cost = 500
 
 [node name="Art" type="Node2D" parent="."]
 position = Vector2( 0, 10 )
