@@ -17,8 +17,8 @@ func _ready():
   GlobalSignal.listen('increase_energy', self, '_on_Increase_energy')
 
 func _physics_process(_delta):
-  GlobalSignal.dispatch('debug_label', { 'text': EnergyBar.value })
-  GlobalSignal.dispatch('debug_label2', { 'text': EnergyBar.value > (EnergyBar.max_value - ReductionBar.value) })
+  # GlobalSignal.dispatch('debug_label', { 'text': EnergyBar.value })
+  # GlobalSignal.dispatch('debug_label2', { 'text': EnergyBar.value > (EnergyBar.max_value - ReductionBar.value) })
   if EnergyBar.value > (EnergyBar.max_value - ReductionBar.value):
     EnergyBar.value = ReductionBar.value
 

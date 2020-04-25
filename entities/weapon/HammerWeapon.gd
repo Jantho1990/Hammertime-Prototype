@@ -42,6 +42,7 @@ func _physics_process(delta):
   dir = parent.direction
   cursor_position = get_local_mouse_position()
   # GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
+  GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
   # GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   match current_throw_state:
     throw_state.THROWING:
@@ -52,10 +53,6 @@ func _physics_process(delta):
       handle_throw_state_returning()
     throw_state.HOLDING, _:
      handle_throw_state_holding()
-  
-  if Input.is_action_just_pressed('weapon_throw') and \
-    current_throw_state == throw_state.HOLDING:
-    current_throw_state = throw_state.THROWING
 
 func _on_Teleport():
   if current_throw_state != throw_state.HOLDING:
@@ -69,6 +66,10 @@ func handle_throw_state_holding():
   if rotation != 0:
     rotation = 0
   update_position()
+
+  if Input.is_action_just_pressed('weapon_throw') and \
+    current_throw_state == throw_state.HOLDING:
+      current_throw_state = throw_state.THROWING
 
 func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x

@@ -92,6 +92,7 @@ func _ready():
 func _physics_process(delta):
   # Called every frame. Delta is time since last frame.
   # Update game logic here.
+  GlobalSignal.dispatch('debug_label', { 'text': active_spell.name })
   recharge(delta)
   GlobalSignal.dispatch('energy_change', { 'energy': mana_current })
 
