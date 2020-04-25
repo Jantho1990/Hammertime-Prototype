@@ -59,6 +59,7 @@ func _physics_process(delta):
 
 func _on_Teleport():
   if current_throw_state != throw_state.HOLDING:
+    parent.motion = Vector2(0, 0)
     GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
     $ThrowTween.stop_all()
     $ThrowTween.reset_all()
