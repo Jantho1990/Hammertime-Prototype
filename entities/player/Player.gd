@@ -117,7 +117,9 @@ func _physics_process(delta):
   
   # Action/Spellcasting
   if Input.is_action_just_pressed('cast'):
-    $Spellcaster.cast()
+    if not $Spellcaster.active_spell.name == 'TeleportSpell' or \
+      Weapon.throwing:
+        $Spellcaster.cast()
     # print("no casting for now")
   
   # Final movement integration
