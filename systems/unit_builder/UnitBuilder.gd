@@ -34,6 +34,7 @@ func _on_Build_unit(data):
 #	breakpoint
   var unit_name = data.unit_name
   var unit_position = data.pos
+  var unit_cost = data.cost
   
   if buildable_units.has(unit_name):
     print('Building unit ', unit_name)
@@ -48,5 +49,6 @@ func _on_Build_unit(data):
       'entity': unit,
       'instance': false,
       'container_id': unit_name,
-      'position': unit_position
+      'position': unit_position,
+      'cost': unit_cost
     })

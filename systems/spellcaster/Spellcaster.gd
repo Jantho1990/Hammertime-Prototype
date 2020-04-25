@@ -10,6 +10,8 @@ export(float) var recharge_amount = 20
 export(float) var recharge_rate = 1
 
 var recharge_time = 0
+var reduction_amount = 0
+var calculated_mana_total = mana_total - reduction_amount
 
 #export(String, 'Red', 'Fireball', 'Levitate', 'Shield') var spellNames
 export(NodePath) var active_spell setget set_active_spell,get_active_spell
@@ -58,8 +60,8 @@ func recharge(delta):
     mana_current += recharge_amount
     recharge_time -= recharge_rate
   
-  if mana_current > mana_total:
-    mana_current = mana_total
+  if mana_current > calculated_mana_total:
+    mana_current = calculated_mana_total
   
 #	GlobalSignal.dispatch('update_ui_sanity', {
 #		'current': mana_current
@@ -126,3 +128,8 @@ func set_active_spell(spell):
 
 func get_active_spell():
   return active_spell
+
+func reduce_mana_total(amount):
+  reduction_amount += amount
+  calculated_mana_total = mana_total - reduction_amount
+  GlobalSignal.dispatch('reduce_energy', { 'reduction': amount })

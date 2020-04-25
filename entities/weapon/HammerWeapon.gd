@@ -41,8 +41,8 @@ func _physics_process(delta):
   __delta = delta
   dir = parent.direction
   cursor_position = get_local_mouse_position()
-  GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
-  GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
+  # GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
+  # GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   match current_throw_state:
     throw_state.THROWING:
       handle_throw_state_throwing()
