@@ -33,6 +33,7 @@ func _on_Build_unit(data):
   print('data', data)
 #	breakpoint
   var unit_name = data.unit_name
+  var unit_position = data.pos
   
   if buildable_units.has(unit_name):
     print('Building unit ', unit_name)
@@ -46,5 +47,6 @@ func _on_Build_unit(data):
     GlobalSignal.dispatch("add_" + unit_name, {
       'entity': unit,
       'instance': false,
-      'container_id': unit_name
+      'container_id': unit_name,
+      'position': unit_position
     })

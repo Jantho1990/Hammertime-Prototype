@@ -4,3 +4,4 @@
 
 [node name="PlatformConstructContainer" type="Node"]
 script = ExtResource( 1 )
+container_id = "PlatformConstruct"
