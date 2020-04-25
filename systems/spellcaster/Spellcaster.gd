@@ -77,6 +77,13 @@ func _ready():
   # Initialization here
   if active_spell != null and !active_spell.is_empty():
     active_spell = get_node(active_spell)
+  
+  GlobalSignal.dispatch('set_energy', {
+    'energy': mana_current,
+    'max_energy': mana_total,
+    'min_energy': 0,
+    'reduction': 0
+  })
 
 func _physics_process(delta):
   # Called every frame. Delta is time since last frame.
