@@ -5,6 +5,8 @@ func _unhandled_input(event):
     if Selection.has_selection():
       var selected_entity = Selection.selected_entity
       GlobalSignal.dispatch('delete_unit', { 'entity': selected_entity })
+    else:
+      GlobalSignal.dispatch('delete_all_units')
 
   if event is InputEventMouseButton and event.pressed:
     if event.button_index == BUTTON_LEFT:

@@ -7,6 +7,10 @@ func _init().():
   container_callback = "on_Add_PlatformConstruct"
   container_callback_remove = "on_Remove_PlatformConstruct"
 
+func _ready():
+  ._ready()
+  GlobalSignal.listen('delete_all_units', self, '_on_Delete_all_units')
+
 func on_Add_PlatformConstruct(data):
   # breakpoint
   if data.container_id == container_id:
@@ -19,3 +23,6 @@ func on_Add_PlatformConstruct(data):
 
 func on_Remove_PlatformConstruct(data):
   on_Remove_entity(data)
+
+func _on_Delete_all_units():
+  clear_children()
