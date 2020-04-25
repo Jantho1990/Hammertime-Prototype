@@ -24,6 +24,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/DataStore.gd"
 }, {
+"base": "Node",
+"class": "DoorContainer",
+"language": "GDScript",
+"path": "res://containers/DoorContainer/DoorContainer.gd"
+}, {
+"base": "Node",
+"class": "EnemyContainer",
+"language": "GDScript",
+"path": "res://containers/EnemyContainer/EnemyContainer.gd"
+}, {
 "base": "Construct",
 "class": "PlatformConstruct",
 "language": "GDScript",
@@ -48,6 +58,8 @@ _global_script_class_icons={
 "BudgetSystem": "",
 "Construct": "",
 "DataStore": "",
+"DoorContainer": "",
+"EnemyContainer": "",
 "PlatformConstruct": "",
 "Spell": "",
 "TilemapCollisionArea": "",
