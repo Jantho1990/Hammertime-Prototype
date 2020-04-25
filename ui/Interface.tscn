@@ -5,9 +5,10 @@
 
 [node name="Interface" type="CanvasLayer"]
 
-[node name="UI" type="MarginContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="EnergyBarUI" type="MarginContainer" parent="."]
+margin_right = 230.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 200, 20 )
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -16,15 +17,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="EnergyBarContainer" type="HBoxContainer" parent="UI"]
+[node name="SpellcasterEnergyBar" parent="EnergyBarUI" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 15.0
 margin_top = 15.0
-margin_right = 1009.0
-margin_bottom = 585.0
-
-[node name="SpellcasterEnergyBar" parent="UI/EnergyBarContainer" instance=ExtResource( 1 )]
-margin_right = 200.0
-margin_bottom = 20.0
+margin_right = 215.0
+margin_bottom = 35.0
 
 [node name="DebugContainer" type="MarginContainer" parent="."]
 anchor_left = 1.0
