@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/SpellcasterEnergyBar.gd" type="Script" id=1]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.478125, 0.0666667, 0.686275, 1 )
@@ -15,6 +17,7 @@ custom_styles/bg = SubResource( 2 )
 step = 1.0
 value = 50.0
 percent_visible = false
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

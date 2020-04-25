@@ -82,6 +82,7 @@ func _physics_process(delta):
   # Called every frame. Delta is time since last frame.
   # Update game logic here.
   recharge(delta)
+  GlobalSignal.dispatch('energy_change', { 'energy': mana_current })
 
 # Find a spell using any key and value.
 func find_spell(key, value):
