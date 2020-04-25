@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ui/SpellcasterEnergyBar.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tests/DebugLabel.gd" type="Script" id=2]
+[ext_resource path="res://ui/Interface.gd" type="Script" id=3]
 
 [node name="Interface" type="CanvasLayer"]
+script = ExtResource( 3 )
 
 [node name="EnergyBarUI" type="MarginContainer" parent="."]
 margin_right = 230.0
