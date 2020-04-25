@@ -1,10 +1,9 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://entities/constructs/PlatformConstruct/PlatformConstruct.gd" type="Script" id=1]
 [ext_resource path="res://entities/constructs/PlatformConstruct/platform (top only).png" type="Texture" id=2]
 [ext_resource path="res://entities/constructs/PlatformConstruct/platform (jets only).png" type="Texture" id=3]
 [ext_resource path="res://systems/selection_manager/SelectionArea.tscn" type="PackedScene" id=4]
-[ext_resource path="res://systems/draggable/Draggable.tscn" type="PackedScene" id=5]
 [ext_resource path="res://systems/placeable/Placeable.tscn" type="PackedScene" id=6]
 [ext_resource path="res://systems/placeable/PlacementArea.tscn" type="PackedScene" id=7]
 [ext_resource path="res://systems/deletable/Deletable.tscn" type="PackedScene" id=8]
@@ -91,7 +90,7 @@ __meta__ = {
 [node name="CollisionArea" type="StaticBody2D" parent="."]
 position = Vector2( 0, -6 )
 collision_layer = 8
-collision_mask = 13
+collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea"]
 shape = SubResource( 3 )
@@ -106,10 +105,7 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
 shape = SubResource( 4 )
 
-[node name="Draggable" parent="." instance=ExtResource( 5 )]
-
 [node name="Placeable" parent="." instance=ExtResource( 6 )]
-allowed_to_move = true
 
 [node name="PlacementArea" parent="Placeable" instance=ExtResource( 7 )]
 position = Vector2( 0, 6 )

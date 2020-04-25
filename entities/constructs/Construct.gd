@@ -5,7 +5,7 @@ class_name Construct
 var is_gizmo = true # Used by collision system to check if this is a gizmo.
 
 enum COLLISION_LAYERS {
-  PLACED = 4,
+  PLACED = 8,
   MOVING = 8
 }
 
@@ -21,7 +21,8 @@ func _ready():
   Selection.register_listener('deselect', self, '_on_Deselection')
 
 func _physics_process(delta):
-  GlobalSignal.dispatch('debug_label', { 'text': position })
+  # GlobalSignal.dispatch('debug_label', { 'text': position })
+  GlobalSignal.dispatch('debug_label', { 'text': CollisionArea.collision_layer })
   if Selection.selected_entity == self and Placeable.allowed_to_move and \
     not CollisionArea.collision_layer == COLLISION_LAYERS.MOVING:
       CollisionArea.collision_layer = COLLISION_LAYERS.MOVING
