@@ -19,7 +19,7 @@ func _ready():
   
   # Preload all entites.
   for unit_name in buildable_unit_names:
-    var path = buildable_units_path + unit_name + '.tscn'
+    var path = buildable_units_path + unit_name + '/' + unit_name + '.tscn'
     print('path', path)
     var buildable_unit = load(buildable_units_path + unit_name + '.tscn')
     buildable_units[unit_name] = buildable_unit

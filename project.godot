@@ -37,7 +37,7 @@ _global_script_classes=[ {
 "base": "Construct",
 "class": "PlatformConstruct",
 "language": "GDScript",
-"path": "res://entities/constructs/Platform/PlatformConstruct.gd"
+"path": "res://entities/constructs/PlatformConstruct/PlatformConstruct.gd"
 }, {
 "base": "Node2D",
 "class": "Spell",
