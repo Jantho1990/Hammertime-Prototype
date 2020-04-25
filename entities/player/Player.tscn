@@ -67,6 +67,10 @@ process_material = SubResource( 2 )
 scale = Vector2( 0.5, 0.5 )
 
 [node name="Spellcaster" parent="." instance=ExtResource( 7 )]
+recharge_amount = 1.25
+recharge_rate = 0.1
 active_spell = NodePath("TeleportSpell")
 
 [node name="TeleportSpell" parent="Spellcaster" instance=ExtResource( 8 )]
+cost = 25.0
+cooldown = 0.1
