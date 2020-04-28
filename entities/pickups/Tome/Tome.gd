@@ -5,6 +5,7 @@ var height setget ,height
 
 func _ready():
 	self.connect("body_entered", self, "_on_Body_entered")
+	GlobalSignal.dispatch('pickup_created')
 
 func _physics_process(delta):
 	position.y += sin(global.run_time / 0.1) * 0.35

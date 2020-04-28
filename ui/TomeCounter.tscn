@@ -22,3 +22,17 @@ margin_top = 5.0
 margin_right = 59.0
 margin_bottom = 19.0
 text = "1"
+
+[node name="Seperator" type="Label" parent="."]
+margin_left = 63.0
+margin_top = 5.0
+margin_right = 68.0
+margin_bottom = 19.0
+text = "/"
+
+[node name="Total" type="Label" parent="."]
+margin_left = 72.0
+margin_top = 5.0
+margin_right = 80.0
+margin_bottom = 19.0
+text = "1"
