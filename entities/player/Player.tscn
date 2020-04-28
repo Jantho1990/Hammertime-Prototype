@@ -74,7 +74,7 @@ recharge_rate = 0.1
 active_spell = NodePath("TeleportSpell")
 
 [node name="TeleportSpell" parent="Spellcaster" instance=ExtResource( 8 )]
-cost = 25.0
+cost = 35.0
 cooldown = 0.1
 
 [node name="CreateConstruct" parent="Spellcaster" instance=ExtResource( 9 )]
