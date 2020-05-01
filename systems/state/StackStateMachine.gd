@@ -46,7 +46,6 @@ func _set_private(_throwaway_):
 func _ready():
 	for state in states:
 		if state == default:
-			print(state)
 			push(state)
 
 func _process(delta):

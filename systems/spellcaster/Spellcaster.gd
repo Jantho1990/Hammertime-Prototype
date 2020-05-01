@@ -34,10 +34,7 @@ func get_spells():
 
 # Attempt to cast a spell
 func cast():
-  print('casting')
-  print(active_spell, ' is active')
   if typeof(active_spell) == TYPE_NODE_PATH and active_spell.is_empty():
-    print('welp')
     return
   
   if active_spell == null:
@@ -47,10 +44,8 @@ func cast():
   
   if spell.can_cast(mana_current):
     spell.effect()
-    print('can cast')
   else:
     # notify user that they can't cast the spell
-    print('Cannot cast')
     pass
 
 # Recharge the spellcaster's mana

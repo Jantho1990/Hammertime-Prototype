@@ -120,7 +120,6 @@ func _physics_process(delta):
     if Weapon.throwing:
         $Spellcaster.switch_active_spell_by_name('TeleportSpell')
         $Spellcaster.cast()
-    # print("no casting for now")
   
   # Construct building
   if Input.is_action_just_pressed('build_construct') and Weapon.throwing:
@@ -138,12 +137,10 @@ func die():
   if not is_dead:
     is_dead = true
 #		$Sounds/Scream.play()
-    print("dead")
     playAnim("die")
     # Disable child processes so nothing updates further
     for child in get_children():
       if child.name != "Sounds":
-        print(child.name)
         child.set_physics_process(false)
         child.set_process(false)
 
@@ -165,10 +162,8 @@ func hit(damage, source = null):
   $SanitySplatter.emitting = true
   move_and_slide(motion, UP)
   add_child(immobile_timer)
-  print("freeze")
 
 func _on_Immobile_timer_end():
-  print("unfreeze")
   $MovementHandler.unfreeze()
   $SanitySplatter.emitting = false
   remove_child(immobile_timer)

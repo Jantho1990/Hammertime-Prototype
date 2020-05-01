@@ -32,7 +32,6 @@ func _input_event(viewport, event, shape_idx):
 		event is InputEventMouseButton and \
 		event.pressed and \
 		event.button_index == BUTTON_LEFT:
-			print("triggered")
 			emit_signal("selection_area_triggered", parent)
 
 func register_entity():

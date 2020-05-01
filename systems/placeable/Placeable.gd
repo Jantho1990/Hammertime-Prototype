@@ -44,9 +44,7 @@ func _on_Exiting_tree():
   Selection.unregister_listener('deselect', self, '_on_Deselection')
 
 func _on_Move_unit():
-  print('hit')
   if Selection.selected_entity == parent: # or Selection.previously_selected_entity == parent:
-    print("moving unit")
     allowed_to_move = true
     old_position = parent.position
 
@@ -56,14 +54,10 @@ func _on_Selection(selected_unit, previously_selected_unit = null):
     pass
 
 func _on_Deselection(previously_selected_unit):
-  print(previously_selected_unit.name, ' was previously selected')
-  print('This is ', parent.name, ', and it is ', allowed_to_move, ' that I am allowed to move and ', is_cancelling_placement, ' that I am cancelling my placement.')
   if previously_selected_unit == parent:
-    print(parent.name, " is the previously selected unit")
     
     if not is_cancelling_placement:
       if allowed_to_move and not allowed_to_place:
-        print("not allowed to place")
         return false
       
       allowed_to_move = false

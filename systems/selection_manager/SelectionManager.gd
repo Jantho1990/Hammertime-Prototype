@@ -58,7 +58,6 @@ func unregister_listener(event_name, node, method_name):
 	match event_name:
 		'select':
 			if select_listeners.has(listener.hash()):
-				print('unregistered select')
 				select_listeners.erase(listener.hash())
 		'deselect':
 			if deselect_listeners.has(listener.hash()):
@@ -75,14 +74,11 @@ func register_entity(entity):
 # Clears any selected entity so nothing is selected.
 func clear_selection():
 	if deselect_entity(selected_entity) == false:
-#		select_entity(selected_entity)
-		print("cancel deselection")
 		return
 	selected_entity = null
 	for listener in clear_listeners.values():
 		var callback = funcref(listener.node, listener.method_name)
 		callback.call_func(previously_selected_entity)
-	print("cleared!")
 
 # Select a entity
 func select_entity(entity = null):
@@ -103,7 +99,6 @@ func select_entity(entity = null):
 		selected_entity = entity
 		var selection_area = get_selection_area(entity)
 		selection_area.mark_as_selected()
-		print("selected", selected_entity)
 	
 	for listener in select_listeners.values():
 		var callback = funcref(listener.node, listener.method_name)

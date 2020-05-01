@@ -20,7 +20,6 @@ func _ready():
   # Preload all entites.
   for unit_name in buildable_unit_names:
     var path = buildable_units_path + unit_name + '/' + unit_name + '.tscn'
-    print('path', path)
     var buildable_unit = load(path)
     buildable_units[unit_name] = buildable_unit
     GlobalSignal.dispatch('unit_loaded', { 'unit': buildable_unit })
@@ -30,14 +29,11 @@ func _ready():
 #	pass
 
 func _on_Build_unit(data):
-  print('data', data)
-#	breakpoint
   var unit_name = data.unit_name
   var unit_position = data.pos
   var unit_cost = data.cost
   
   if buildable_units.has(unit_name):
-    print('Building unit ', unit_name)
     var buildable_unit = buildable_units[unit_name]
     var unit = buildable_unit.instance()
     unit.energy_cost = unit_cost

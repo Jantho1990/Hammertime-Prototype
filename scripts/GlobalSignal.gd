@@ -86,18 +86,12 @@ func callback(event):
     return
   
   var listeners = _event_listeners[name]
-#	print('listeners', listeners)
   for listener in listeners.values():
-#		print('l: ', listener)
-#		print('h: ', listener.hash())
-#		print('g: ', weakref(listener.node).get_ref())
     # If the listener has been freed, remove it
     if !weakref(listener.node).get_ref() or \
       !is_instance_valid(listener.node) or \
       listener.node.get_instance_id() != listener.node_id:
-#			remove(name, weakref(listener.node), listener.method_name)
       listeners.erase(listener.node_id)
-#			print("weakref removed", listener)
       continue
     
     # If the node id doesn't match the listener key, something has corrupted the

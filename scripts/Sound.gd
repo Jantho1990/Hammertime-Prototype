@@ -32,7 +32,7 @@ var sfx = 1.00 setget _set_private
 ###
 
 func _ready():
-	print(AudioServer.get_device_list())
+	# print(AudioServer.get_device_list())
 	for channel in channels:
 		var audio_bus = AudioBus.new()
 		var bus = AudioServer.get_bus_index(channel)
@@ -62,9 +62,7 @@ func _set_channel_volume(channel, value):
 	var audio_bus = audio_buses[channel]
 	var volume_range = audio_bus.max_db - audio_bus.min_db
 	var new_volume = (value * volume_range) + (audio_bus.min_db + audio_bus.max_db)
-	print("new_volume ", new_volume, " on ", AudioServer.get_bus_index(channel))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(channel), new_volume)
-	print(channel, " volume: ", AudioServer.get_bus_volume_db(AudioServer.get_bus_index(channel)))
 	
 #	GlobalSignal.dispatch("sound_updated", { "channel": channel, "value": value })
 
