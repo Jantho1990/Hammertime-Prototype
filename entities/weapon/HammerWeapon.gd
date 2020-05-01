@@ -11,7 +11,7 @@ enum throw_state {
 
 var current_throw_state = throw_state.HOLDING setget set_throw_state
 
-var hold_offset = Vector2(12, 0)
+var hold_offset = position # Vector2(12, 0)
 var dir = Vector2(1, 0)
 var throwing = false
 var returning = false
@@ -28,7 +28,8 @@ var motion = Vector2(0, 0)
 var rotation_force_deg = 60
 var __delta
 
-onready var parent = get_parent()
+onready var parent = get_parent().get_parent().get_parent()
+onready var pivot = get_parent()
 onready var throwTween = $ThrowTween
 
 # Called when the node enters the scene tree for the first time.
@@ -42,7 +43,7 @@ func _physics_process(delta):
   dir = parent.direction
   cursor_position = get_local_mouse_position()
   # GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
-  GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
+  # GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
   # GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   match current_throw_state:
     throw_state.THROWING:
@@ -173,7 +174,10 @@ func _on_Tween_returning_stop():
   update_position()
 
 func update_position():
-  position = hold_offset * dir
+  # pass
+  position = pivot.position
+  # GlobalSignal.dispatch('debug_label2', { 'text': global_position })
+  # position = hold_offset * dir
 
 func set_throw_state(value):
   if throw_state.has(value):
