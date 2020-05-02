@@ -99,6 +99,7 @@ func throw_weapon():
   throw_origin_position = global_position
   thrown_dir = dir# * Vector2(-1, 1) # correct the x direction since dir is inverted
   throw_target_position.rotated(throw_target_position.angle() - throw_target_position.angle())
+  $Sprite.rotation = 0
   # throw_target_position = (global_position + (Vector2(throw_range, 0) * thrown_dir)).rotated(global_position.angle_to_point(cursor_position))
   var tvec = (position + cursor_position).normalized() * throw_range # * thrown_dir
   throw_target_position = global_position + tvec
@@ -184,7 +185,8 @@ func _on_Tween_returning_stop():
 
 func update_position():
   position = hold_offset * dir
-  position.y += sin(global.run_time / 0.1) * 4
+  position.y += sin(global.run_time / 0.15) * 4
+  $Sprite.rotation = position.angle_to_point(cursor_position) - deg2rad(90)
 
 func set_throw_state(value):
   if throw_state.has(value):
