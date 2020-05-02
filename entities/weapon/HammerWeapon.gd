@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 const UP = Vector2(0, -1)
+const MELEE_RETURN_TIME = 0.05
+const THROW_RETURN_TIME = 0.2
 
 enum throw_state {
   HOLDING,
@@ -22,11 +24,12 @@ var throw_acceleration = 1
 var throw_max_speed = 1600
 var meleeing = false
 var melee_range = 100
-var melee_max_speed = 2400
+var melee_max_speed = 3200
 var melee_charge_delay = 0.15
 var charge_delay_active = false
 var throw_range = 400
 var throw_travel_distance = 0
+var return_time = THROW_RETURN_TIME
 var thrown_dir = dir
 var throw_origin_position = Vector2(0, 0)
 var throw_target_position = Vector2(0, 0)
@@ -108,6 +111,7 @@ func handle_throw_state_throwing():
   # rotation_degrees += rotation_force_deg * dir.x
   
   if not throwing and not meleeing:
+    return_time = THROW_RETURN_TIME
     throw_weapon()
   else:
     update_thrown_weapon()
@@ -125,6 +129,7 @@ func handle_throw_state_returning():
 func handle_throw_state_melee():
   if !meleeing:
     meleeing = true
+    return_time = MELEE_RETURN_TIME
     start_melee_charge_delay()
   
   var charging = Input.is_action_pressed('weapon_melee') and \
@@ -231,9 +236,9 @@ func tween_return():
     var destination = hold_offset * dir
     # var destination = parent.position
     # var destination = parent.global_position
-    $ThrowTween.interpolate_property(self, 'position', start, destination, 0.2)
-    # $ThrowTween.interpolate_property(self, 'global_position', start, destination, 0.2)
-    $ThrowTween.interpolate_callback(self, 0.2, '_on_Tween_returning_stop')
+    $ThrowTween.interpolate_property(self, 'position', start, destination, return_time)
+    # $ThrowTween.interpolate_property(self, 'global_position', start, destination, return_time)
+    $ThrowTween.interpolate_callback(self, return_time, '_on_Tween_returning_stop')
     $ThrowTween.start()
 
 func _on_Tween_throwing_stop():
