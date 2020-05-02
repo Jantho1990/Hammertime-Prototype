@@ -19,7 +19,9 @@ var throwing = false
 var returning = false
 var throw_acceleration = 1
 var throw_max_speed = 1600
+var meleeing = false
 var melee_range = 100
+var melee_max_speed = 2400
 var melee_charge_delay = 0.15
 var charge_delay_active = false
 var throw_range = 400
@@ -99,7 +101,7 @@ func handle_throw_state_holding():
 func handle_throw_state_throwing():
   rotation_degrees += rotation_force_deg * dir.x
   
-  if not throwing:
+  if not throwing and not meleeing:
     throw_weapon()
   else:
     update_thrown_weapon()
@@ -115,18 +117,30 @@ func handle_throw_state_returning():
   tween_return()
 
 func handle_throw_state_melee():
+  if !meleeing:
+    meleeing = true
+    start_melee_charge_delay()
+  
   var charging = Input.is_action_pressed('weapon_melee') and \
     !Input.is_action_just_pressed('weapon_melee') and \
-    !charge_delay_active
+    !charge_delay_active and \
+    !throwing
 
+  if collision_detected() or throw_travel_distance >= melee_range:
+    next_throw_state = throw_state.RETURNING
+  
   if not charging:
+    print('NORMAL MELEE')
     melee_normal()
   else:
+    print('CHARGING: ', charging)
+    print('WEAPON PRESSED: ', Input.is_action_pressed('weapon_melee'))
+    print('WEAPON JUST PRESSED: ', Input.is_action_just_pressed('weapon_melee'))
+    print('CHARGE DELAY: ', charge_delay_active)
+    print('THROWING: ', throwing)
     breakpoint
     pass
   
-  if collision_detected() or throw_travel_distance >= melee_range:
-    next_throw_state = throw_state.RETURNING
   GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
 
 func throw_weapon():
@@ -162,11 +176,12 @@ func calculate_throw_target(throw_type = 'throw'):
 
 func calculate_motion():
   var motion_velocity = throw_max_speed * __delta
+  var max_speed = melee_max_speed if meleeing else throw_max_speed
   # motion = (Vector2(throw_max_speed, 0)).rotated(global_position.angle_to_point(throw_target_position))
   # motion = (position + (throw_target_position * thrown_dir)).clamped(throw_max_speed)
-  motion = position.direction_to(throw_target_position) * throw_max_speed
+  motion = position.direction_to(throw_target_position) * max_speed
   # GlobalSignal.dispatch('debug_label2', { 'text': motion })
-  throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
+  throw_travel_distance = min(throw_travel_distance + (max_speed * __delta), throw_range)
 
 func collision_detected():
   return get_slide_count() > 0
@@ -202,8 +217,6 @@ func tween_return():
     # GlobalSignal.dispatch('debug_label2', { 'text': 'fish' })
     # breakpoint
     var offset_position = Vector2(0, 0) + (global_position - parent.global_position)
-    var gb = global_position
-    var pgb = parent.global_position
     GlobalSignal.dispatch('hammer_returned', { 'hammer': self })
     # breakpoint
     # var start = position
@@ -226,10 +239,13 @@ func _on_Tween_suspending_stop():
 func _on_Tween_returning_stop():
   next_throw_state = throw_state.HOLDING
   throwing = false
+  meleeing = false
   returning = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
   update_position()
+  stop_melee_charge_delay()
+  print('STOPPED')
 
 func update_position():
   position = hold_offset * dir
@@ -243,16 +259,21 @@ func set_throw_state(value):
 func melee_normal():
   if not throwing:
     throwing = true
+    # meleeing = true
     calculate_throw_target('melee')
     release_weapon()
     calculate_motion()
-    start_melee_charge_delay()
+    # start_melee_charge_delay()
   else:
     update_thrown_weapon()
 
 func start_melee_charge_delay():
   MeleeChargeDelay.start(melee_charge_delay)
   charge_delay_active = true
+
+func stop_melee_charge_delay():
+  MeleeChargeDelay.stop()
+  charge_delay_active = false
 
 func _on_Melee_charge_delay_timeout():
   charge_delay_active = false
