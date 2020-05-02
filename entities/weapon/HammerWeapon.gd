@@ -184,7 +184,7 @@ func _on_Tween_returning_stop():
 
 func update_position():
   position = hold_offset * dir
-  # position.y += sin(global.run_time / 0.1) * 4
+  position.y += sin(global.run_time / 0.1) * 4
 
 func set_throw_state(value):
   if throw_state.has(value):
