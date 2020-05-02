@@ -20,14 +20,9 @@ var dir = Vector2(1, 1)
 var throwing = false
 var returning = false
 var rotating = false
+
 var throw_acceleration = 1
 var throw_max_speed = 1600
-var meleeing = false
-var melee_held = false
-var melee_range = 100
-var melee_max_speed = 3200
-var melee_charge_delay = 0.15
-var charge_delay_active = false
 var throw_range = 400
 var throw_travel_distance = 0
 var return_time = THROW_RETURN_TIME
@@ -35,6 +30,16 @@ var thrown_dir = dir
 var throw_origin_position = Vector2(0, 0)
 var throw_target_position = Vector2(0, 0)
 var cursor_position = Vector2(0, 0)
+
+var meleeing = false
+var melee_charging = false
+var melee_charge_force = 0
+var melee_held = false
+var melee_range = 100
+var melee_max_speed = 3200
+var melee_charge_delay = 0.15
+var charge_delay_active = false
+
 var motion = Vector2(0, 0)
 
 var rotation_force_deg = 60
@@ -289,6 +294,9 @@ func melee_normal():
     # start_melee_charge_delay()
   elif throwing:
     update_thrown_weapon()
+
+func melee_charged():
+  pass
 
 func start_melee_charge_delay():
   MeleeChargeDelay.start(melee_charge_delay)
