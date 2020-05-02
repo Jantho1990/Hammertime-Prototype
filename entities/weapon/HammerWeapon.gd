@@ -17,6 +17,7 @@ var hold_offset = Vector2(-12, -6)
 var dir = Vector2(1, 1)
 var throwing = false
 var returning = false
+var rotating = false
 var throw_acceleration = 1
 var throw_max_speed = 1600
 var meleeing = false
@@ -52,6 +53,10 @@ func _physics_process(delta):
   if dir.y <= 0:
     dir.y = 1
   cursor_position = get_local_mouse_position()
+  
+  if rotating:
+    rotation_degrees += rotation_force_deg * dir.x
+
   # cursor_position = get_global_mouse_position()
   # GlobalSignal.dispatch('debug_label2', { 'text': dir })
   GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
@@ -99,7 +104,8 @@ func handle_throw_state_holding():
   update_position()
 
 func handle_throw_state_throwing():
-  rotation_degrees += rotation_force_deg * dir.x
+  rotating = true
+  # rotation_degrees += rotation_force_deg * dir.x
   
   if not throwing and not meleeing:
     throw_weapon()
@@ -109,11 +115,11 @@ func handle_throw_state_throwing():
   GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
   
 func handle_throw_state_suspending():
-  rotation_degrees += rotation_force_deg * thrown_dir.x
+  # rotation_degrees += rotation_force_deg * thrown_dir.x
   tween_suspend()
 
 func handle_throw_state_returning():
-  rotation_degrees += rotation_force_deg * thrown_dir.x
+  # rotation_degrees += rotation_force_deg * thrown_dir.x
   tween_return()
 
 func handle_throw_state_melee():
@@ -241,6 +247,7 @@ func _on_Tween_returning_stop():
   throwing = false
   meleeing = false
   returning = false
+  rotating = false
   motion = Vector2(0, 0)
   throw_travel_distance = 0
   update_position()
