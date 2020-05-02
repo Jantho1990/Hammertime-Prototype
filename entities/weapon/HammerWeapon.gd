@@ -23,6 +23,7 @@ var rotating = false
 var throw_acceleration = 1
 var throw_max_speed = 1600
 var meleeing = false
+var melee_held = false
 var melee_range = 100
 var melee_max_speed = 3200
 var melee_charge_delay = 0.15
@@ -132,24 +133,33 @@ func handle_throw_state_melee():
     return_time = MELEE_RETURN_TIME
     start_melee_charge_delay()
   
-  var charging = Input.is_action_pressed('weapon_melee') and \
-    !Input.is_action_just_pressed('weapon_melee') and \
+  # If this is the first frame in this state, defer to next frame
+  # so we can detect if hammer is being charged.
+  if Input.is_action_just_pressed('weapon_melee'):
+    return
+  
+  if Input.is_action_pressed('weapon_melee'):
+    melee_held = true
+  elif Input.is_action_just_released('weapon_melee'):
+    melee_held = false
+
+  var charging = melee_held and \
     !charge_delay_active and \
     !throwing
 
   if collision_detected() or throw_travel_distance >= melee_range:
     next_throw_state = throw_state.RETURNING
   
-  if not charging:
+  if (not charging and not melee_held) or Input.is_action_just_released('weapon_melee'):
     print('NORMAL MELEE')
     melee_normal()
-  else:
+  elif charging:
     print('CHARGING: ', charging)
     print('WEAPON PRESSED: ', Input.is_action_pressed('weapon_melee'))
     print('WEAPON JUST PRESSED: ', Input.is_action_just_pressed('weapon_melee'))
     print('CHARGE DELAY: ', charge_delay_active)
     print('THROWING: ', throwing)
-    breakpoint
+    # breakpoint
     pass
   
   GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
@@ -268,15 +278,16 @@ func set_throw_state(value):
   if throw_state.has(value):
     current_throw_state = throw_state[value]
 
-func melee_normal():
+func melee_normal():  
   if not throwing:
     throwing = true
+    # melee_held = true
     # meleeing = true
     calculate_throw_target('melee')
     release_weapon()
     calculate_motion()
     # start_melee_charge_delay()
-  else:
+  elif throwing:
     update_thrown_weapon()
 
 func start_melee_charge_delay():
