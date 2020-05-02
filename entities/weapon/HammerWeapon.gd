@@ -141,6 +141,7 @@ func handle_throw_state_melee():
   # If this is the first frame in this state, defer to next frame
   # so we can detect if hammer is being charged.
   if Input.is_action_just_pressed('weapon_melee'):
+    update_position()
     return
   
   if Input.is_action_pressed('weapon_melee'):
@@ -165,6 +166,7 @@ func handle_throw_state_melee():
     print('CHARGE DELAY: ', charge_delay_active)
     print('THROWING: ', throwing)
     # breakpoint
+    melee_charged()
     pass
   
   GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
@@ -296,7 +298,11 @@ func melee_normal():
     update_thrown_weapon()
 
 func melee_charged():
-  pass
+  if melee_held:
+    position = (hold_offset + Vector2(-12, 0)) * dir
+    position.y += sin(global.run_time / 0.025) * 4
+    position.x += cos(global.run_time / 0.025) * 2
+    $Sprite.rotation = position.angle_to_point(cursor_position) - deg2rad(90)
 
 func start_melee_charge_delay():
   MeleeChargeDelay.start(melee_charge_delay)
