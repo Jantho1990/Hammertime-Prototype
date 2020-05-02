@@ -100,7 +100,7 @@ func throw_weapon():
   thrown_dir = dir# * Vector2(-1, 1) # correct the x direction since dir is inverted
   throw_target_position.rotated(throw_target_position.angle() - throw_target_position.angle())
   # throw_target_position = (global_position + (Vector2(throw_range, 0) * thrown_dir)).rotated(global_position.angle_to_point(cursor_position))
-  var tvec = (position + cursor_position).clamped(throw_range)# * thrown_dir
+  var tvec = (position + cursor_position).normalized() * throw_range # * thrown_dir
   throw_target_position = global_position + tvec
   GlobalSignal.dispatch('debug_label', { 'text': String(tvec) + ' ' + String(cursor_position) + ' ' + String(thrown_dir) })
   GlobalSignal.dispatch('hammer_thrown', { 'hammer': self })
