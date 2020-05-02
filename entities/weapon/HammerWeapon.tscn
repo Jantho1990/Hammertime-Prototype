@@ -53,3 +53,5 @@ anims/throw = SubResource( 3 )
 [node name="ThrowTween" type="Tween" parent="."]
 
 [node name="ReturnTween" type="Tween" parent="."]
+
+[node name="MeleeChargeDelay" type="Timer" parent="."]
