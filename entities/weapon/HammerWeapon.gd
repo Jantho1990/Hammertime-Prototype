@@ -11,8 +11,8 @@ enum throw_state {
 
 var current_throw_state = throw_state.HOLDING setget set_throw_state
 
-var hold_offset = Vector2(12, 0)
-var dir = Vector2(1, 0)
+var hold_offset = Vector2(-12, -6)
+var dir = Vector2(1, 1)
 var throwing = false
 var returning = false
 var throw_acceleration = 1
@@ -40,9 +40,13 @@ func _ready():
 func _physics_process(delta):
   __delta = delta
   dir = parent.direction
+  if dir.y <= 0:
+    dir.y = 1
   cursor_position = get_local_mouse_position()
+  # cursor_position = get_global_mouse_position()
+  # GlobalSignal.dispatch('debug_label2', { 'text': dir })
   # GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
-  GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
+  # GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
   # GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   match current_throw_state:
     throw_state.THROWING:
@@ -93,9 +97,12 @@ func handle_throw_state_returning():
 func throw_weapon():
   throwing = true
   throw_origin_position = global_position
-  thrown_dir = dir
+  thrown_dir = dir# * Vector2(-1, 1) # correct the x direction since dir is inverted
   throw_target_position.rotated(throw_target_position.angle() - throw_target_position.angle())
-  throw_target_position = (global_position + (Vector2(throw_range, 0) * dir)).rotated(position.angle_to(cursor_position))
+  # throw_target_position = (global_position + (Vector2(throw_range, 0) * thrown_dir)).rotated(global_position.angle_to_point(cursor_position))
+  var tvec = (position + cursor_position).clamped(throw_range)# * thrown_dir
+  throw_target_position = global_position + tvec
+  GlobalSignal.dispatch('debug_label', { 'text': String(tvec) + ' ' + String(cursor_position) + ' ' + String(thrown_dir) })
   GlobalSignal.dispatch('hammer_thrown', { 'hammer': self })
   calculate_motion()
   motion = move_and_slide(motion, UP)
@@ -106,7 +113,10 @@ func update_thrown_weapon():
 
 func calculate_motion():
   var motion_velocity = throw_max_speed * __delta
-  motion = (Vector2(throw_max_speed, 0) * thrown_dir).rotated(global_position.angle_to(throw_target_position))
+  # motion = (Vector2(throw_max_speed, 0)).rotated(global_position.angle_to_point(throw_target_position))
+  # motion = (position + (throw_target_position * thrown_dir)).clamped(throw_max_speed)
+  motion = position.direction_to(throw_target_position) * throw_max_speed
+  GlobalSignal.dispatch('debug_label2', { 'text': motion })
   throw_travel_distance = min(throw_travel_distance + (throw_max_speed * __delta), throw_range)
 
 func collision_detected():
@@ -174,6 +184,7 @@ func _on_Tween_returning_stop():
 
 func update_position():
   position = hold_offset * dir
+  # position.y += sin(global.run_time / 0.1) * 4
 
 func set_throw_state(value):
   if throw_state.has(value):
