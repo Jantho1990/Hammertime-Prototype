@@ -33,7 +33,10 @@ var cursor_position = Vector2(0, 0)
 
 var meleeing = false
 var melee_charging = false
-var melee_charge_force = 0
+var melee_min_force = 50
+var melee_max_force = 500
+var melee_force_delta = 10
+var melee_force = melee_min_force
 var melee_held = false
 var melee_range = 100
 var melee_max_speed = 3200
@@ -69,6 +72,7 @@ func _physics_process(delta):
   # cursor_position = get_global_mouse_position()
   # GlobalSignal.dispatch('debug_label2', { 'text': dir })
   GlobalSignal.dispatch('debug_label', { 'text': current_throw_state })
+  GlobalSignal.dispatch('debug_label2', { 'text': melee_force })
   # GlobalSignal.dispatch('debug_label2', { 'text': current_throw_state })
   # GlobalSignal.dispatch('debug_label2', { 'text': $ThrowTween.is_active() })
   calculate_throw_state()
@@ -169,7 +173,7 @@ func handle_throw_state_melee():
     melee_charged()
     pass
   
-  GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
+  # GlobalSignal.dispatch('debug_label2', { 'text': throw_travel_distance })
 
 func throw_weapon():
   throwing = true
@@ -271,6 +275,7 @@ func _on_Tween_returning_stop():
   returning = false
   rotating = false
   motion = Vector2(0, 0)
+  melee_force = melee_min_force
   throw_travel_distance = 0
   update_position()
   stop_melee_charge_delay()
@@ -303,6 +308,10 @@ func melee_charged():
     position.y += sin(global.run_time / 0.025) * 4
     position.x += cos(global.run_time / 0.025) * 2
     $Sprite.rotation = position.angle_to_point(cursor_position) - deg2rad(90)
+    if melee_force < melee_max_force:
+      melee_force += melee_force_delta
+    else:
+      melee_force = melee_max_force
 
 func start_melee_charge_delay():
   MeleeChargeDelay.start(melee_charge_delay)
